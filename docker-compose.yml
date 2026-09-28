@@ -1,0 +1,74 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: config/Dockerfile
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./www:/var/www/html
+      - ./config/php/php.ini:/usr/local/etc/php/conf.d/99-custom-php.ini:ro
+    networks:
+      - web-network
+      - traefik
+    environment:
+      - DB_HOST=db
+      - DB_USER=${DB_USER:-user}
+      - DB_PASSWORD=${DB_PASSWORD:-user_password}
+      - DB_NAME=${DB_NAME:-mydatabase}
+      - PROJECT_NAME=${PROJECT_NAME:-My project}
+      - APP_URL=${APP_URL:-http://myapp.local}
+      - XDEBUG_MODE=debug,develop
+      - XDEBUG_CONFIG=client_host=host.docker.internal client_port=9003
+      - PHP_IDE_CONFIG=serverName=${APP_URL:-http://myapp.local}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.${ENVIRONMENT:-myapp}.rule=Host(`${VIRTUAL_HOST:-myapp.local}`)"
+      - "traefik.http.routers.${ENVIRONMENT:-myapp}.entrypoints=web"
+      - "traefik.http.services.${ENVIRONMENT:-myapp}.loadbalancer.server.port=80"
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:11.4
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MARIADB_DATABASE: ${DB_NAME:-mydatabase}
+      MARIADB_USER: ${DB_USER:-user}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-user_password}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./config/mariadb/custom.cnf:/etc/mysql/conf.d/custom.cnf:ro
+    networks:
+      - web-network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: always
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 0
+    networks:
+      - web-network
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${ENVIRONMENT:-myapp}-pma.rule=Host(`pma.${VIRTUAL_HOST:-myapp.local}`)"
+      - "traefik.http.routers.${ENVIRONMENT:-myapp}-pma.entrypoints=web"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.services.${ENVIRONMENT:-myapp}-pma.loadbalancer.server.port=80"
+
+networks:
+  web-network:
+    driver: bridge
+  traefik:
+    external: true
+
+volumes:
+  db_data:
