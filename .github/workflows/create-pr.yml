@@ -15,17 +15,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Create Pull Request
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: ${{ github.ref_name }}
         run: |
-          if ! gh pr list \
+          if [ "$(gh pr list \
             --head "$BRANCH" \
             --base develop \
             --state open \
             --json number \
-            --jq 'length' | grep -q '^0$'; then
+            --jq 'length')" -gt 0 ]; then
             echo "Pull Request already exists."
             exit 0
           fi
