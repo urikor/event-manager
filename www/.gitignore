@@ -7,6 +7,7 @@
 /web/libraries/
 /.editorconfig
 /.gitattributes
+/backups/
 
 # Ignore local settings
 /web/sites/*/services.local.yml
