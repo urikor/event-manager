@@ -9,6 +9,7 @@
 /.gitattributes
 /backups/
 
+
 # Ignore local settings
 /web/sites/*/services.local.yml
 /web/sites/*/settings.local.php
