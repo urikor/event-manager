@@ -4,7 +4,7 @@ WEB = $(DC) exec web
 DB_DUMP_DIR := ./www/backups
 DB_DUMP_FILE := $(DB_DUMP_DIR)/dump-$(shell date +%Y-%m-%dT%H-%M).sql.gz
 
-.PHONY: up upb build down restart bash cr cst cex cim db-dump composer composer-show
+.PHONY: up upb build down restart bash cr cst cex cim updb db-dump composer composer-show
 
 up:
 	$(DC) up -d
@@ -33,6 +33,8 @@ cex:
 cim:
 	$(WEB) ./vendor/bin/drush cim
 
+updb:
+	$(WEB) ./vendor/bin/drush updb
 db-dump:
 	mkdir -p $(DB_DUMP_DIR)
 	docker compose exec web ./vendor/bin/drush sql-dump | gzip -9 > $(DB_DUMP_FILE)
