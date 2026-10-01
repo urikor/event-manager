@@ -14,12 +14,14 @@ module:
   dblog: 0
   dynamic_page_cache: 0
   editor: 0
+  event_manager: 0
   field: 0
   field_ui: 0
   file: 0
   filter: 0
   help: 0
   image: 0
+  language: 0
   layout_builder: 0
   layout_discovery: 0
   link: 0
@@ -37,6 +39,7 @@ module:
   text: 0
   user: 0
   views_ui: 0
+  content_translation: 10
   views: 10
   standard: 1000
 theme:
