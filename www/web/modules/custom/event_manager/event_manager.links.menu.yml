@@ -1,7 +1,6 @@
-entity.event.collection:
+event_manager.events_list:
   title: Events
   description: 'Manage events.'
   route_name: entity.event.collection
-  parent: system.admin_content
-  weight: 5
-
+  parent: system.admin_structure
+  weight: 10
