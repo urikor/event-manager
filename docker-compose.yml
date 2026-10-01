@@ -19,8 +19,6 @@ services:
       - DB_NAME=${DB_NAME:-mydatabase}
       - PROJECT_NAME=${PROJECT_NAME:-My project}
       - APP_URL=${APP_URL:-http://myapp.local}
-      - XDEBUG_MODE=debug,develop
-      - XDEBUG_CONFIG=client_host=host.docker.internal client_port=9003
       - PHP_IDE_CONFIG=serverName=${APP_URL:-http://myapp.local}
     labels:
       - "traefik.enable=true"
