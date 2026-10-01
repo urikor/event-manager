@@ -4,10 +4,7 @@ namespace Drupal\event_manager\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\EditorialContentEntityBase;
-use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\RevisionLogEntityTrait;
-use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -29,6 +26,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'published' => 'status',
   ],
   handlers: [
+    'view_builder' => EventViewBuilder::class,
     'list_builder' => 'Drupal\event_manager\EventListBuilder',
     'form' => [
       'default' => 'Drupal\event_manager\EventForm',
@@ -86,22 +84,25 @@ class Event extends EditorialContentEntityBase {
 
     $fields['description'] = BaseFieldDefinition::create('text_long')
       ->setLabel(new TranslatableMarkup('Description'))
+      ->setRequired(TRUE)
       ->setTranslatable(TRUE)
       ->setDisplayOptions('form', ['type' => 'text_textarea', 'weight' => -9])
       ->setDisplayOptions('view', ['label' => 'above', 'type' => 'text_default', 'weight' => 0]);
 
     foreach (['start_date' => 'Start date', 'end_date' => 'End date'] as $name => $label) {
       $fields[$name] = BaseFieldDefinition::create('datetime')
-        ->setLabel(new TranslatableMarkup($label))
+        ->setLabel(new TranslatableMarkup('@label', ['@label' => $label]))
         ->setRequired(TRUE)
         ->setSettings(['datetime_type' => 'datetime'])
         ->setTranslatable(TRUE)
         ->setDisplayOptions('form', ['type' => 'datetime_default', 'weight' => $name === 'start_date' ? -8 : -7])
-        ->setDisplayOptions('view', ['label' => 'above', 'type' => 'datetime_default', 'weight' => $name === 'start_date' ? 1 : 2]);
+        ->setDisplayOptions('view',
+          ['label' => 'above', 'type' => 'datetime_default', 'weight' => $name === 'start_date' ? 1 : 2]);
     }
 
     $fields['location'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Location'))
+      ->setRequired(TRUE)
       ->setSettings(['max_length' => 255])
       ->setTranslatable(TRUE)
       ->setDisplayOptions('form', ['type' => 'string_textfield', 'weight' => -6])
