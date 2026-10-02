@@ -1,0 +1,22 @@
+uuid: 5e334884-6115-413b-8273-7effbec6b2e7
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime
+    - event_manager
+_core:
+  default_config_hash: z8_C8vspxCy7XIqC4Y_-lwlvfqhh5p6u_2NUh8aRZqI
+id: event.field_start_date
+field_name: field_start_date
+entity_type: event
+type: datetime
+settings:
+  datetime_type: datetime
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

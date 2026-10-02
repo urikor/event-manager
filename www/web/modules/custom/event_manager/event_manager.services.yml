@@ -1,0 +1,6 @@
+services:
+  event_manager.event_subscriber:
+    class: Drupal\event_manager\EventSubscriber\EventManagerSubscriber
+    arguments: ['@current_route_match']
+    tags:
+      - { name: event_subscriber }

@@ -1,0 +1,7 @@
+name: Event Manager
+type: module
+description: 'Provides a revisionable, translatable Event content entity.'
+package: Custom
+core_version_requirement: ^11
+dependencies:
+  - drupal:content_translation

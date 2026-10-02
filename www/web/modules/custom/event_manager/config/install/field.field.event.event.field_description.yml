@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.event.field_description
+    - filter.format.basic_html
+    - filter.format.plain_text
+  module:
+    - event_manager
+    - text
+id: event.event.field_description
+field_name: field_description
+entity_type: event
+bundle: event
+label: Description
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - basic_html
+    - plain_text
+field_type: text_long

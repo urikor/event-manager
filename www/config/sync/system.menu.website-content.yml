@@ -1,0 +1,10 @@
+uuid: 429614db-2211-473c-8d81-a83b9f027f57
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: ONNtvfNuA1Bh1kmmYs-JSgRsqLhA4AspBOnnydxREqk
+id: website-content
+label: 'Website Content'
+description: ''
+locked: false

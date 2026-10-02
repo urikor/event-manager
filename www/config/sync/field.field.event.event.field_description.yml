@@ -1,0 +1,28 @@
+uuid: a97d363f-6c89-4fa9-823d-de99100f1544
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.event.field_description
+    - filter.format.basic_html
+    - filter.format.plain_text
+  module:
+    - event_manager
+    - text
+_core:
+  default_config_hash: Zk_JlSNCa4zfnFnxVJmp032okkt-gxHbBqEUEJD5qRc
+id: event.event.field_description
+field_name: field_description
+entity_type: event
+bundle: event
+label: Description
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - basic_html
+    - plain_text
+field_type: text_long

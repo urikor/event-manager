@@ -1,0 +1,23 @@
+uuid: 454c16b2-b135-40fa-867c-a84c4217027a
+langcode: en
+status: true
+dependencies:
+  module:
+    - event_manager
+_core:
+  default_config_hash: 1h7kJ0uItB7JlZ6uK6Lgjj_oKzkK-905YD-Aerh9Lns
+id: event.field_title
+field_name: field_title
+entity_type: event
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Event Manager module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function event_manager_install(): void {
+  $config = \Drupal::configFactory()->getEditable('navigation.block_layout');
+
+  $sections = $config->get('sections');
+  $uuid = 'a641c1d5-e6a6-48ac-a71e02a9aa8e68a';
+
+  if (isset($sections[0]['components'][$uuid])) {
+    return;
+  }
+
+  $sections[0]['components'][$uuid] = [
+    'uuid' => $uuid,
+    'region' => 'content',
+    'configuration' => [
+      'id' => 'navigation_menu:website-content',
+      'label' => 'Website Content',
+      'label_display' => '0',
+      'provider' => 'navigation',
+      'context_mapping' => [],
+      'level' => 1,
+      'depth' => 2,
+    ],
+    'weight' => 1,
+    'additional' => [],
+  ];
+
+  $config->set('sections', $sections)->save();
+}

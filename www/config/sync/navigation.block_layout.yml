@@ -65,4 +65,17 @@ sections:
           icon_class: help
         weight: -2
         additional: {  }
+      a641c1d5-e6a6-48ac-a71e02a9aa8e68a:
+        uuid: a641c1d5-e6a6-48ac-a71e02a9aa8e68a
+        region: content
+        configuration:
+          id: 'navigation_menu:website-content'
+          label: 'Website Content'
+          label_display: '0'
+          provider: navigation
+          context_mapping: {  }
+          level: 1
+          depth: 2
+        weight: 1
+        additional: {  }
     third_party_settings: {  }
