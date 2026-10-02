@@ -1,0 +1,22 @@
+uuid: 93355dd5-3ef6-4ab1-af01-e1e32b96b560
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.event.field_location
+  module:
+    - event_manager
+_core:
+  default_config_hash: Gq_-6gPw9d6iKhvTZyMStH5xLDjJ1tXlc8dWbkVUnFs
+id: event.event.field_location
+field_name: field_location
+entity_type: event
+bundle: event
+label: Location
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

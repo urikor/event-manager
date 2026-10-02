@@ -21,7 +21,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'id' => 'id',
     'revision' => 'revision_id',
     'uuid' => 'uuid',
-    'label' => 'title',
+    'label' => 'field_title',
     'langcode' => 'langcode',
     'published' => 'status',
   ],
@@ -29,9 +29,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'view_builder' => EventViewBuilder::class,
     'list_builder' => 'Drupal\event_manager\EventListBuilder',
     'form' => [
-      'default' => 'Drupal\event_manager\EventForm',
-      'add' => 'Drupal\event_manager\EventForm',
-      'edit' => 'Drupal\event_manager\EventForm',
+      'default' => 'Drupal\event_manager\Form\EventForm',
+      'add' => 'Drupal\event_manager\Form\EventForm',
+      'edit' => 'Drupal\event_manager\Form\EventForm',
       'delete' => 'Drupal\Core\Entity\ContentEntityDeleteForm',
       'revision-revert' => 'Drupal\Core\Entity\Form\RevisionRevertForm',
       'revision-delete' => 'Drupal\Core\Entity\Form\RevisionDeleteForm',
@@ -52,14 +52,14 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'revision-revert-form' => '/admin/content/events/{event}/revision/{event_revision}/revert',
     'version-history' => '/admin/content/events/{event}/revisions',
   ],
-  admin_permission: 'administer events',
+  admin_permission: 'administer event',
   base_table: 'event',
   data_table: 'event_field_data',
   revision_table: 'event_revision',
   revision_data_table: 'event_field_revision',
   translatable: TRUE,
   show_revision_ui: TRUE,
-  field_ui_base_route: 'entity.event.collection',
+  field_ui_base_route: 'entity.event.settings',
   revision_metadata_keys: [
     'revision_user' => 'revision_uid',
     'revision_created' => 'revision_timestamp',
@@ -73,40 +73,6 @@ class Event extends EditorialContentEntityBase {
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type): array {
     $fields = parent::baseFieldDefinitions($entity_type);
-
-    $fields['title'] = BaseFieldDefinition::create('string')
-      ->setLabel(new TranslatableMarkup('Title'))
-      ->setRequired(TRUE)
-      ->setSettings(['max_length' => 255])
-      ->setTranslatable(TRUE)
-      ->setDisplayOptions('form', ['type' => 'string_textfield', 'weight' => -10])
-      ->setDisplayOptions('view', ['label' => 'hidden', 'type' => 'string', 'weight' => -10]);
-
-    $fields['description'] = BaseFieldDefinition::create('text_long')
-      ->setLabel(new TranslatableMarkup('Description'))
-      ->setRequired(TRUE)
-      ->setTranslatable(TRUE)
-      ->setDisplayOptions('form', ['type' => 'text_textarea', 'weight' => -9])
-      ->setDisplayOptions('view', ['label' => 'above', 'type' => 'text_default', 'weight' => 0]);
-
-    foreach (['start_date' => 'Start date', 'end_date' => 'End date'] as $name => $label) {
-      $fields[$name] = BaseFieldDefinition::create('datetime')
-        ->setLabel(new TranslatableMarkup('@label', ['@label' => $label]))
-        ->setRequired(TRUE)
-        ->setSettings(['datetime_type' => 'datetime'])
-        ->setTranslatable(TRUE)
-        ->setDisplayOptions('form', ['type' => 'datetime_default', 'weight' => $name === 'start_date' ? -8 : -7])
-        ->setDisplayOptions('view',
-          ['label' => 'above', 'type' => 'datetime_default', 'weight' => $name === 'start_date' ? 1 : 2]);
-    }
-
-    $fields['location'] = BaseFieldDefinition::create('string')
-      ->setLabel(new TranslatableMarkup('Location'))
-      ->setRequired(TRUE)
-      ->setSettings(['max_length' => 255])
-      ->setTranslatable(TRUE)
-      ->setDisplayOptions('form', ['type' => 'string_textfield', 'weight' => -6])
-      ->setDisplayOptions('view', ['label' => 'above', 'type' => 'string', 'weight' => 3]);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(new TranslatableMarkup('Created'));

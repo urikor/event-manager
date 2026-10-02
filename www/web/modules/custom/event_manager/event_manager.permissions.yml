@@ -1,4 +1,3 @@
-administer events:
-  title: 'Administer events'
+administer event:
+  title: 'Administer event entities'
   restrict access: true
-

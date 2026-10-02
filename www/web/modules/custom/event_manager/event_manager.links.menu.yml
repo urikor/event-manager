@@ -1,6 +1,12 @@
-event_manager.events_list:
-  title: Events
-  description: 'Manage events.'
+event_manager.events:
+  title: 'Events'
   route_name: entity.event.collection
+  menu_name: website-content
+  weight: 1
+
+event_manager.events_fields:
+  title: Events settings
+  description: 'Manage events settings.'
+  route_name: entity.event.field_ui_fields
   parent: system.admin_structure
-  weight: 10
+  weight: 11

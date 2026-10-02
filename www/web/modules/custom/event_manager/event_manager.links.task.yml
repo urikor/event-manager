@@ -1,0 +1,4 @@
+event_manager.settings_tab:
+  route_name: entity.event.settings
+  title: 'Settings'
+  base_route: entity.event.settings

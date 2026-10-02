@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\event_manager;
+namespace Drupal\event_manager\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
@@ -18,7 +18,9 @@ class EventForm extends ContentEntityForm {
     $insert = $event->isNew();
     $event->save();
 
-    $this->messenger()->addStatus($insert ? $this->t('Event %label has been created.', ['%label' => $event->label()]) : $this->t('Event %label has been updated.', ['%label' => $event->label()]));
+    $this->messenger()->addStatus($insert
+      ? $this->t('Event %label has been created.', ['%label' => $event->label()])
+      : $this->t('Event %label has been updated.', ['%label' => $event->label()]));
     $form_state->setRedirect('entity.event.collection');
     return $insert ? SAVED_NEW : SAVED_UPDATED;
   }
