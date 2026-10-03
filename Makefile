@@ -1,10 +1,11 @@
 DC = docker compose
 WEB = $(DC) exec web
+WEB_USER = $(DC) exec --user $(shell id -u):$(shell id -g) web
 
 DB_DUMP_DIR := ./www/backups
 DB_DUMP_FILE := $(DB_DUMP_DIR)/dump-$(shell date +%Y-%m-%dT%H-%M).sql.gz
 
-.PHONY: up upb build down restart bash cr cst cex cim updb status uli db-dump db-drop composer composer-show
+.PHONY: up upb build down restart bash drush db-dump db-drop composer
 
 up:
 	$(DC) up -d
@@ -24,28 +25,14 @@ restart:
 bash:
 	$(WEB) bash
 
-cr:
-	$(WEB) ./vendor/bin/drush cr
-cst:
-	$(WEB) ./vendor/bin/drush cst
-cex:
-	$(WEB) ./vendor/bin/drush cex
-cim:
-	$(WEB) ./vendor/bin/drush cim
+drush:
+	$(WEB_USER) ./vendor/bin/drush $(filter-out $@,$(MAKECMDGOALS))
 
-updb:
-	$(WEB) ./vendor/bin/drush updb
-status:
-	$(WEB) ./vendor/bin/drush status
-uli:
-	$(WEB) ./vendor/bin/drush uli
 db-dump:
 	mkdir -p $(DB_DUMP_DIR)
-	$(WEB) ./vendor/bin/drush sql-dump | gzip -9 > $(DB_DUMP_FILE)
+	$(WEB_USER) ./vendor/bin/drush sql-dump | gzip -9 > $(DB_DUMP_FILE)
 db-drop:
-	$(WEB) ./vendor/bin/drush sql-drop
+	$(WEB_USER) ./vendor/bin/drush sql-drop
 
 composer:
-	$(DC) exec web composer
-composer-show:
-	$(DC) exec web composer show
+	$(WEB_USER) composer $(filter-out $@,$(MAKECMDGOALS))
