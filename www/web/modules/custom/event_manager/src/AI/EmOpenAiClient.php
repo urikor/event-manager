@@ -3,7 +3,6 @@
 namespace Drupal\event_manager\AI;
 
 use Drupal\Core\Site\Settings;
-use Psr\Log\InvalidArgumentException;
 
 /**
  * Main client for OpenAI API.
@@ -59,9 +58,6 @@ class EmOpenAiClient {
    *
    * @return array
    *   Normalized response containing text and usage data.
-   *
-   * @throws \InvalidArgumentException
-   *   If the API type is not supported.
    */
   public function request(
     string $type,
@@ -82,7 +78,7 @@ class EmOpenAiClient {
         $input,
       ),
 
-      default => throw new InvalidArgumentException(
+      default => throw new \InvalidArgumentException(
         sprintf('Unsupported OpenAI API type: %s', $type)
       ),
     };

@@ -27,7 +27,6 @@ services:
     arguments:
       - '@current_route_match'
       - '@logger.channel.event_manager'
-      - '@event_manager.ai.openai_client'
     tags:
       - { name: event_subscriber }
 
