@@ -2,6 +2,10 @@
 
 namespace Drupal\event_manager\AI;
 
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
+use Psr\Log\LoggerInterface;
+
 /**
  * Client for OpenAI Responses API.
  */
@@ -15,11 +19,14 @@ class EmResponsesClient {
   /**
    * Constructs an EmResponsesClient object.
    *
-   * @param \Drupal\event_manager\AI\EmOpenAiHttpClient $httpClient
-   *   Shared OpenAI HTTP client.
+   * @param \GuzzleHttp\ClientInterface $httpClient
+   *   HTTP client.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   Event Manager logger.
    */
   public function __construct(
-    private EmOpenAiHttpClient $httpClient,
+    private ClientInterface $httpClient,
+    private LoggerInterface $logger,
   ) {}
 
   /**
@@ -33,33 +40,59 @@ class EmResponsesClient {
    *   User input.
    *
    * @return array
-   *   Decoded data array.
+   *   Normalized response containing text and usage data.
    */
   public function request(
     string $apiKey,
     string $model,
     string $input,
   ): array {
-    $response = $this->httpClient->post(self::ENDPOINT, [
-      'model' => $model,
-      'input' => $input,
-      'instructions' => 'You are a helpful assistant.',
-    ], $apiKey);
+    try {
+      $response = $this->httpClient->request('POST', self::ENDPOINT, [
+        'headers' => [
+          'Authorization' => 'Bearer ' . $apiKey,
+          'Content-Type' => 'application/json',
+        ],
+        'json' => [
+          'model' => $model,
+          'input' => $input,
+          'instructions' => 'You are a helpful assistant.',
+        ],
+      ]);
+
+      $data = json_decode(
+        $response->getBody()->getContents(),
+        TRUE,
+        512,
+        JSON_THROW_ON_ERROR
+      );
+    }
+    catch (GuzzleException | \JsonException $e) {
+      $this->logger->error(
+        'OpenAI Responses API request failed: @message',
+        [
+          '@message' => $e->getMessage(),
+          'exception' => $e,
+        ]
+      );
+
+      return [];
+    }
 
     return [
-      'text' => $this->extractOutputText($response),
-      'usage' => $this->extractUsage($response),
+      'text' => $this->extractOutputText($data),
+      'usage' => $this->extractUsage($data),
     ];
   }
 
   /**
-   * Extracts text from response.
+   * Extracts generated text from a Responses API response.
    *
    * @param array $response
-   *   Response output array.
+   *   Decoded API response.
    *
    * @return string
-   *   Extracted text.
+   *   Generated text.
    */
   private function extractOutputText(array $response): string {
     foreach ($response['output'] ?? [] as $output) {
@@ -78,13 +111,13 @@ class EmResponsesClient {
   }
 
   /**
-   * Returns AI request usage data array.
+   * Extracts usage information.
    *
    * @param array $response
-   *   AI request response.
+   *   Decoded API response.
    *
    * @return array
-   *   AI request usage data array.
+   *   Token usage information.
    */
   private function extractUsage(array $response): array {
     $usage = $response['usage'] ?? [];

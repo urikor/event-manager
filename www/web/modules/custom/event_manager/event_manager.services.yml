@@ -1,30 +1,36 @@
 services:
-  event_manager.ai.openai_http_client:
-    class: Drupal\event_manager\AI\EmOpenAiHttpClient
+  event_manager.ai.service:
+    class: Drupal\event_manager\Service\EventManagerAiService
     arguments:
-      - '@http_client'
-      - '@logger.channel.event_manager'
+      - '@event_manager.ai.openai_client'
+
+  event_manager.ai.openai_client:
+    class: Drupal\event_manager\AI\EmOpenAiClient
+    arguments:
+      - '@event_manager.ai.responses_client'
+      - '@event_manager.ai.chat_completions_client'
 
   event_manager.ai.responses_client:
     class: Drupal\event_manager\AI\EmResponsesClient
     arguments:
-      - '@event_manager.ai.openai_http_client'
+      - '@http_client'
+      - '@logger.channel.event_manager'
 
   event_manager.ai.chat_completions_client:
     class: Drupal\event_manager\AI\EmChatCompletionsClient
     arguments:
-      - '@event_manager.ai.openai_http_client'
-
-  logger.channel.event_manager:
-    parent: logger.channel_base
-    arguments: ['event_manager']
+      - '@http_client'
+      - '@logger.channel.event_manager'
 
   event_manager.event_subscriber:
     class: Drupal\event_manager\EventSubscriber\EventManagerSubscriber
     arguments:
       - '@current_route_match'
       - '@logger.channel.event_manager'
-      - '@event_manager.ai.responses_client'
-      - '@event_manager.ai.chat_completions_client'
+      - '@event_manager.ai.openai_client'
     tags:
       - { name: event_subscriber }
+
+  logger.channel.event_manager:
+    parent: logger.channel_base
+    arguments: ['event_manager']
