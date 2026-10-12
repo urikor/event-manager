@@ -9,6 +9,7 @@ services:
     volumes:
       - ./www:/var/www/html
       - ./config/php/php.ini:/usr/local/etc/php/conf.d/99-custom-php.ini:ro
+      - ./www/profiles:/tmp
     networks:
       - web-network
       - traefik
