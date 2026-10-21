@@ -9,6 +9,7 @@ services:
     volumes:
       - ./www:/var/www/html
       - ./config/php/php.ini:/usr/local/etc/php/conf.d/99-custom-php.ini:ro
+      - ./www/profiles:/tmp
     networks:
       - web-network
       - traefik
@@ -19,6 +20,7 @@ services:
       - DB_NAME=${DB_NAME:-mydatabase}
       - PROJECT_NAME=${PROJECT_NAME:-My project}
       - APP_URL=${APP_URL:-http://myapp.local}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
       - PHP_IDE_CONFIG=serverName=${APP_URL:-http://myapp.local}
     labels:
       - "traefik.enable=true"
