@@ -4,6 +4,13 @@ services:
     arguments:
       - '@event_manager.ai.openai_client'
 
+  event_manager.event_creator:
+    class: Drupal\event_manager\Service\EventManagerEventCreator
+    arguments:
+      - '@entity_type.manager'
+      - '@logger.channel.event_manager'
+      - '@config.factory'
+
   event_manager.ai.openai_client:
     class: Drupal\event_manager\AI\EmOpenAiClient
     arguments:
